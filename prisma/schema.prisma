@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  email     String    @db.VarChar(100) @unique
+  password  String    @db.VarChar(50)
+  createAt  DateTime  @default(now())
+  updateAt  DateTime? @default(now())
+  deletedAt DateTime?
+  profile   profile?
+  bank_accounts bankAccounts[]
+}
+
+model profile {
+  id              Int       @id @default(autoincrement())
+  user_id         Int       @unique
+  identity_type   String    @db.VarChar(100)
+  identity_number String    @db.VarChar(100)
+  address         String    @db.Text
+  createAt        DateTime  @default(now())
+  updateAt        DateTime? @default(now())
+  deletedAt       DateTime?
+  user user @relation(fields: [user_id], references: [id])
+}
+
+model bankAccounts {
+  id                  Int       @id @default(autoincrement())
+  user_id             Int       
+  bank_name           String    @db.VarChar(100)
+  bank_account_number Int       @db.Integer @unique
+  balance             Int       @db.Integer
+  createAt            DateTime  @default(now())
+  updateAt            DateTime? @default(now())
+  deletedAt           DateTime?
+  user user @relation(fields: [user_id], references: [id])
+  source       transactions[] @relation("transactionSourceAccount")
+  destination  transactions[] @relation("transactionDestinationAccount")
+}
+
+model transactions {
+  id                      Int       @id @default(autoincrement())
+  source_account_id       Int       @db.Integer
+  destination_account_id  Int       @db.Integer
+  amount                  Int       @db.Integer
+  createAt                DateTime  @default(now())
+  updateAt                DateTime? @default(now())
+  deletedAt               DateTime?
+  bank_account_source      bankAccounts @relation(name: "transactionSourceAccount", fields: [source_account_id], references: [bank_account_number])
+  bank_account_destination bankAccounts @relation(name: "transactionDestinationAccount", fields: [destination_account_id], references: [bank_account_number])
+}
