@@ -1,13 +1,14 @@
 
 const { ResponseTemplate } = require('../helper/template.helper')
 const Joi = require('joi');
-const { PrismaClient} = require('@prisma/client')
+const jwt = require('jsonwebtoken')
 
+const { PrismaClient} = require('@prisma/client')
 const prisma = new PrismaClient()
 
 function CheckPostUser(req, res, next) {
     const schema = Joi.object({
-        name: Joi.string().alphanum().max(255).required(),
+        name: Joi.string().max(255).required(),
         email: Joi.string().email().required(),
         password: Joi.string().alphanum().min(6).required(),
         identity_type: Joi.string().required(),
@@ -114,6 +115,31 @@ async function CheckIdTransaction(req, res, next) {
     next()
 }
 
+async function Restrict(req, res, next) {
+
+    const { authorization } = req.headers
+
+    if (!authorization) {
+        let resp = ResponseTemplate(null, 'user unauthorized', null, 400)
+        res.json(resp)
+        return
+    }
+
+    try {
+
+        const user = await jwt.verify(authorization, process.env.SECRET_KEY)
+
+        req.user = user
+
+        next()
+
+    } catch (error) {
+        let resp = ResponseTemplate(null, 'user not authorized', null, 401)
+        res.json(resp)
+        return
+    }
+}
+
 
 module.exports = {
     CheckPostUser,
@@ -121,5 +147,6 @@ module.exports = {
     CheckPostBankAccount,
     CheckIdBankAccount,
     CheckPostTransaction,
-    CheckIdTransaction
+    CheckIdTransaction,
+    Restrict
 }

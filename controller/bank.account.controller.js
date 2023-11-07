@@ -15,6 +15,31 @@ async function Insert(req, res) {
     }
 
     try {
+
+        const checkAccount = await prisma.bankAccounts.findFirst({
+            where: {
+                user_id: payload.user_id,
+            }
+        })
+
+        if (checkAccount === null) {
+            let resp = ResponseTemplate(null, 'user not found', null, 404)
+            res.json(resp)
+            return
+        }
+
+        const checkBankNumber = await prisma.bankAccounts.findFirst({
+            where: {
+                bank_account_number: payload.bank_account_number,
+            }
+        })
+
+        if (checkBankNumber !== null) {
+            let resp = ResponseTemplate(null, 'bank account number already exist', null, 400)
+            res.json(resp)
+            return
+        }
+
         const account = await prisma.bankAccounts.create({
             data: payload,
         })
@@ -33,31 +58,17 @@ async function Insert(req, res) {
 
 async function Get(req, res) {
 
-    const { user_id, bank_name, bank_account_number, balance  } = req.query
+    const { user_id, bank_name, bank_account_number, balance, page = 1, limit = 10 } = req.query
 
     const payload = {}
 
-    if (user_id) {
-        payload.user_id = user_id
-    }
-
-    if (bank_name) {
-        payload.bank_name = bank_name
-    }
-
-    if (bank_account_number) {
-        payload.bank_account_number = bank_account_number
-    }
-
-    if (balance) {
-        payload.balance = balance
-    }
+    if (user_id) payload.user_id = user_id
+    if (bank_name) payload.bank_name = bank_name
+    if (bank_account_number) payload.bank_account_number = bank_account_number
+    if (balance) payload.balance = balance
 
     try {
 
-        // let page =1
-        // let limit = 10
-        let { page = 1, limit = 10 } = req.query // menghasilkan string
         let skip = ( page - 1 ) * limit
 
         //informasi total data keseluruhan 
@@ -101,7 +112,11 @@ async function Get(req, res) {
             data: bankAccount
         }
 
-        if (bankAccount === null) {
+        const cekBankAccount = (objectName) => {
+            return Object.keys(objectName).length === 0
+        }
+
+        if (cekBankAccount(bankAccount) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
             res.json(resp)
             return

@@ -28,6 +28,10 @@ const { CheckPostBankAccount, CheckIdBankAccount } = require('../middleware/midd
  *     responses:
  *       200:
  *         description: Successful response
+ *       400:
+ *         description: Bad request
+ *       404:
+ *         description: Not found
  */
 router.post('/bank_accounts/', CheckPostBankAccount, Insert)
 
