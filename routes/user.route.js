@@ -1,8 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const { Insert, Login, Get, GetByPK, Update, Delete } = require('../controller/user.controller')
-const { CheckPostUser, CheckIdUser, Restrict } = require('../middleware/middleware')
-const { ResponseTemplate } = require('../helper/template.helper')
+const { Insert, Get, GetByPK, Update, Delete } = require('../controller/user.controller')
+const { CheckPostUser, CheckIdUser } = require('../middleware/middleware')
 
 /**
  * @swagger
@@ -39,58 +38,6 @@ const { ResponseTemplate } = require('../helper/template.helper')
  *         description: Internal server error
  */
 router.post('/users/', CheckPostUser, Insert)
-
-/**
- * @swagger
- * /api/v2/users/login:
- *   post:
- *     tags:
- *      - "User"
- *     summary: example to login user
- *     requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                email:
- *                  type: string
- *                password:
- *                  type: string
- *     responses:
- *       200:
- *         description: Successful response
- *       400:
- *         description: Bad request
- */
-router.post('/users/login', Login)
-
-// /**
-//  * @swagger
-//  * /api/v2/users/auth:
-//  *   post:
-//  *     tags:
-//  *      - "User"
-//  *     summary: example to get authenticated user
-//  *     parameters:
-//  *       - in: headers
-//  *         name: Authorization
-//  *         required: true
-//  *         description: The token
-//  *         schema:
-//  *           type: string
-//  *     responses:
-//  *       200:
-//  *         description: Successful response
-//  */
-router.post('/users/auth', Restrict, (req, res) => {
-    let user = {
-        user: req.user
-    }
-    let resp = ResponseTemplate(user, 'success', null, 200)
-    return res.json(resp)
-})
 
 /**
  * @swagger

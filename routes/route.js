@@ -2,6 +2,7 @@ const express = require('express')
 const userRoute = require('./user.route')
 const accountRoute = require('./bank.account.route')
 const transactionRoute = require('./transaction.route')
+const authRoute = require('./auth.route')
 const morgan = require('morgan')
 
 // version 1 
@@ -12,7 +13,7 @@ v1.use('/', [userRoute, accountRoute, transactionRoute])
 // version 2
 const v2 = express.Router()
 v2.use(morgan('dev'))
-v2.use('/', [userRoute, accountRoute, transactionRoute])
+v2.use('/', [userRoute, accountRoute, transactionRoute, authRoute])
 
 const router = express.Router()
 router.use('/api/v1', v1)

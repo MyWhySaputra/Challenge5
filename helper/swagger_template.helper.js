@@ -16,7 +16,12 @@ const swaggerDefinition = {
 
         ],
     },
-    apis: ['./routes/user.route.js', './routes/bank.account.route.js', './routes/transaction.route.js'],
+    apis: [
+        './routes/user.route.js',
+        './routes/bank.account.route.js',
+        './routes/transaction.route.js',
+        './routes/auth.route.js'
+    ],
 
 }
 

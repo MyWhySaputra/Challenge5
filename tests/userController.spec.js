@@ -1,8 +1,4 @@
-const { Insert, Login, Get, GetByPK, Update, Delete } = require('../controller/user.controller')
-const jwt = require('jsonwebtoken')
-const { PrismaClient} = require('@prisma/client')
-
-const prisma = new PrismaClient()
+const { Insert, Get, GetByPK, Update, Delete } = require('../controller/user.controller')
 
 
 describe('Insert function', () => {
@@ -16,12 +12,12 @@ describe('Insert function', () => {
     
     it('Create: email already exists', async () => {
         const req = mockRequest({
-            name: 'John Doe',
-            email: 'johndoe@example.com', // isi email yang sudah ada
+            name: 'wahyu',
+            email: 'wahyu@gmail.com', // isi email yang sudah ada
             password: 'password123',
             identity_type: 'ID',
-            identity_number: '1234567890',
-            address: '123 Main St',
+            identity_number: '123456789',
+            address: 'Depok',
         })
 
         const res = mockResponse()
@@ -38,12 +34,12 @@ describe('Insert function', () => {
 
     it('Create: create user', async () => {
         const req = mockRequest({
-            name: 'New User',
-            email: 'newuser36@example.com',
-            password: 'newpassword123',
+            name: 'Budi',
+            email: 'budi@gmail.com',
+            password: 'budi12345',
             identity_type: 'ID',
-            identity_number: '1234567890',
-            address: '456 New St',
+            identity_number: '123456787',
+            address: 'Depok',
         })
         const res = mockResponse();
 
@@ -54,79 +50,6 @@ describe('Insert function', () => {
             message: 'success',
             error: null,
             status: 200,
-        })
-    })
-})
-
-describe('Login function', () => {
-    const mockRequest = (body) => ({ body });
-    const mockResponse = () => {
-        const res = {};
-        res.status = jest.fn().mockReturnValue(res)
-        res.json = jest.fn().mockReturnValue(res)
-        return res;
-    }
-
-    it('should login and return a JWT token', async () => {
-        const email = 'dakuy@gmail.com'
-        const password = 'dakuy12345'
-
-        // Mock Prisma findFirst method to return a user
-        const mockUser = { id: 1, email, password: 'hashedPassword' }
-        jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(mockUser)
-
-        // Mock jwt.sign to return a token
-        jest.spyOn(jwt, 'sign').mockReturnValue('mockedToken')
-
-        const req = mockRequest({ email, password })
-        const res = mockResponse()
-
-        await Login(req, res)
-
-        expect(res.json).toHaveBeenCalledWith({
-            data: 'mockedToken',
-            message: 'success',
-            error: null,
-            status: 200,
-        })
-    })
-
-    it('should respond with "email is not found or incorrect" for invalid email', async () => {
-        const email = 'joko@gmail.com'
-        const password = 'password123'
-
-        jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(null)
-
-        const req = mockRequest({ email, password })
-        const res = mockResponse()
-
-        await Login(req, res)
-
-        expect(res.json).toHaveBeenCalledWith({
-            data: null,
-            message: 'email is not found or incorrect',
-            error: null,
-            status: 400,
-        })
-    })
-
-    it('should respond with "password is not correct" for incorrect password', async () => {
-        const email = 'johndoe@example.com'
-        const password = 'incorrectPassword'
-
-        const mockUser = { id: 1, email, password: 'hashedPassword' }
-        jest.spyOn(prisma.user, 'findFirst').mockResolvedValue(mockUser)
-
-        const req = mockRequest({ email, password })
-        const res = mockResponse()
-
-        await Login(req, res)
-
-        expect(res.json).toHaveBeenCalledWith({
-            data: null,
-            message: 'password is not correct',
-            error: null,
-            status: 400,
         })
     })
 })
@@ -142,7 +65,7 @@ describe('Get function', () => {
 
     it('should respond with success and data when users are found', async () => {
         const req = mockRequest({
-            name: 'John Doe',
+            name: 'wahyu',
         })
         const res = mockResponse()
 
@@ -163,7 +86,7 @@ describe('Get function', () => {
 
     it('should respond with data not found', async () => {
         const req = mockRequest({
-            name: 'NonExistentUser',
+            name: 'ininamatidakada',
         })
         const res = mockResponse()
 
@@ -187,7 +110,7 @@ describe('GetByPK function', () => {
     };
 
     it('should respond with user data when user is found', async () => {
-        const req = mockRequest({ id: 21 }) // ID yang ada dalam database
+        const req = mockRequest({ id: 35 }) // ID yang ada dalam database
         const res = mockResponse()
 
         await GetByPK(req, res)
@@ -233,7 +156,7 @@ describe('Update function', () => {
     }
 
     it('should update user data when valid data is provided', async () => {
-        const req = mockRequest({ id: 30 }, { name: 'Updated Name' })
+        const req = mockRequest({ id: 35 }, { name: 'ahmad rezza' })
         const res = mockResponse()
 
         await Update(req, res)
@@ -241,7 +164,7 @@ describe('Update function', () => {
         expect(res.json).toHaveBeenCalledWith({
         data: expect.objectContaining({
             id: expect.any(Number),
-            name: 'Updated Name',
+            name: 'ahmad rezza',
             email: expect.any(String),
             profile: expect.objectContaining({
                 identity_type: expect.any(String),
@@ -256,7 +179,7 @@ describe('Update function', () => {
     })
 
     it('should respond with "bad request" when no valid data is provided', async () => {
-        const req = mockRequest({ id: 1 }, {}); // memberikan data kosong
+        const req = mockRequest({ id: 35 }, {}); // memberikan data kosong
         const res = mockResponse()
 
         await Update(req, res)
@@ -293,7 +216,7 @@ describe('Delete function', () => {
     })
 
     it('should delete user data and associated profile', async () => {
-        const req = mockRequest({ id: 32 }) // ID yang ada dalam database
+        const req = mockRequest({ id: 38 }) // ID yang ada dalam database
         const res = mockResponse()
 
         await Delete(req, res)

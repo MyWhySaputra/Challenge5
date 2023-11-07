@@ -1,9 +1,8 @@
 const { ResponseTemplate } = require('../helper/template.helper')
-const { ComparePassword, HashPassword } = require('../helper/hash_pass_helper')
+const { HashPassword } = require('../helper/hash_pass_helper')
 const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
-var jwt = require('jsonwebtoken')
 
 async function Insert(req, res) {
 
@@ -23,8 +22,6 @@ async function Insert(req, res) {
             }
         }
     }
-
-    console.log(payload)
 
     const emailUser = await prisma.user.findUnique({
         where: {email: payload.email},
@@ -72,47 +69,6 @@ async function Insert(req, res) {
         res.json(resp)
         return
 
-    }
-}
-
-async function Login(req, res) {
-
-    try {
-        const { email, password } = req.body
-
-        const checkUser = await prisma.user.findUnique({
-            where: {
-                email: email
-            }
-        })
-
-        if (checkUser === null) {
-            let resp = ResponseTemplate(null, 'email is not found or incorrect', null, 400)
-            res.json(resp)
-            return
-        }
-
-        const checkPassword = await ComparePassword(password, checkUser.password)
-
-        if (!checkPassword) {
-            let resp = ResponseTemplate(null, 'password is not correct', null, 400)
-            res.json(resp)
-            return
-        }
-
-        const token = jwt.sign({
-            email: checkUser.email,
-            user_id: checkUser.id
-        }, process.env.SECRET_KEY);
-
-        let resp = ResponseTemplate(token, 'success', null, 200)
-        res.json(resp)
-        return
-
-    } catch (error) {
-        let resp = ResponseTemplate(null, 'internal server error', error, 500)
-        res.json(resp)
-        return
     }
 }
 
@@ -320,7 +276,6 @@ async function Delete(req, res) {
 
 module.exports = {
     Insert,
-    Login,
     Get,
     GetByPK,
     Update,

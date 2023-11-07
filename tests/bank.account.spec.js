@@ -13,7 +13,7 @@ describe('Insert function', () => {
         const req = mockRequest({
             user_id: '1',
             bank_name: 'BCA',
-            bank_account_number: '1234567890',
+            bank_account_number: '1234567891',
             balance: '100000'
         })
 
