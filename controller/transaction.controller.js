@@ -64,27 +64,16 @@ async function Insert(req, res) {
 
 async function Get(req, res) {
 
-    const { source_account_id, destination_account_id, amount  } = req.query
+    const { source_account_id, destination_account_id, amount, page = 1, limit = 10  } = req.query
 
     const payload = {}
 
-    if (source_account_id) {
-        payload.source_account_id = source_account_id
-    }
-
-    if (destination_account_id) {
-        payload.destination_account_id = destination_account_id
-    }
-
-    if (amount) {
-        payload.amount = amount
-    }
+    if (source_account_id) payload.source_account_id = source_account_id
+    if (destination_account_id) payload.destination_account_id = destination_account_id
+    if (amount) payload.amount = amount
 
     try {
 
-        // let page =1
-        // let limit = 10
-        let { page = 1, limit = 10 } = req.query // menghasilkan string
         let skip = ( page - 1 ) * limit
 
         //informasi total data keseluruhan 
@@ -136,7 +125,11 @@ async function Get(req, res) {
             data: transaction
         }
 
-        if (transaction === null) {
+        const cekTransaction = (objectName) => {
+            return Object.keys(objectName).length === 0
+        }
+
+        if (cekTransaction(transaction) === true) {
             let resp = ResponseTemplate(null, 'data not found', null, 404)
             res.json(resp)
             return
@@ -207,8 +200,6 @@ async function GetByPK(req, res) {
         let resp = ResponseTemplate(null, 'internal server error', error, 500)
         res.json(resp)
         return
-
-
     }
 }
 

@@ -197,22 +197,10 @@ async function Update(req, res) {
         return
     }
 
-    if (user_id) {
-        payload.user_id = user_id
-    }
-
-    if (bank_name) {
-        payload.bank_name = bank_name
-    }
-
-    if (bank_account_number) {
-        payload.bank_account_number = bank_account_number
-    }
-
-    if (balance) {
-        payload.balance = balance
-    }
-
+    if (user_id) payload.user_id = user_id
+    if (bank_name) payload.bank_name = bank_name
+    if (bank_account_number) payload.bank_account_number = bank_account_number
+    if (balance) payload.balance = balance
 
     try {
         const account = await prisma.bankAccounts.update({
@@ -240,6 +228,18 @@ async function Delete(req, res) {
     const { bank_account_number } = req.params
 
     try {
+
+        const CheckBankAccount = await prisma.bankAccounts.findFirst({
+            where: {
+                id: Number(id)
+            }
+        })
+
+        if (CheckBankAccount === null) {
+            let resp = ResponseTemplate(null, 'data not found', null, 404)
+            res.json(resp)
+            return
+        }
 
         const source = await prisma.transactions.findUnique({
             where: {

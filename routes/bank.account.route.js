@@ -42,9 +42,36 @@ router.post('/bank_accounts/', CheckPostBankAccount, Insert)
  *     tags:
  *      - "Bank Account"
  *     summary: Get all bank accounts
+ *     parameters:
+ *       - in: query
+ *         name: user_id
+ *         required: false
+ *         description: The ID of bank account
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: bank_name
+ *         required: false
+ *         description: The name of bank account
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: bank_account_number
+ *         required: false
+ *         description: The bank_account_number of bank account
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: balance
+ *         required: false
+ *         description: The balance of bank account
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Successful response
+ *       404:
+ *         description: Not found
  */
 router.get('/bank_accounts/', Get)
 
@@ -65,6 +92,8 @@ router.get('/bank_accounts/', Get)
  *     responses:
  *       200:
  *         description: Successful response
+ *       404:
+ *         description: Not found
  */
 router.get('/bank_accounts/:id', GetByPK)
 
@@ -85,6 +114,8 @@ router.get('/bank_accounts/:id', GetByPK)
  *     responses:
  *       200:
  *         description: Successful response
+ *       400:
+ *         description: Bad request
  */
 router.put('/bank_accounts/:id', CheckIdBankAccount, Update)
 
@@ -105,6 +136,8 @@ router.put('/bank_accounts/:id', CheckIdBankAccount, Update)
  *     responses:
  *       200:
  *         description: Successful response
+ *       404:
+ *         description: Not found
  */
 router.delete('/bank_accounts/:bank_account_number', Delete)
 

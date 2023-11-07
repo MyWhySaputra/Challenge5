@@ -37,12 +37,24 @@ router.post('/transactions/', CheckPostTransaction, Insert)
  *      - "Transaction"
  *     summary: Get all transactions
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: The ID of the transaction
+ *       - in: query
+ *         name: source_account_id
+ *         required: false
+ *         description: The ID of source_account
  *         schema:
- *           type: integer
+ *           type: string
+ *       - in: query
+ *         name: destination_account_id
+ *         required: false
+ *         description: The ID of destination_account
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: amount
+ *         required: false
+ *         description: The amount of bank account
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
  *         description: Successful response
