@@ -1,12 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const { Insert, Get, GetByPK, Update, Delete } = require('../controller/user.controller')
-const { CheckPostUser, CheckIdUser } = require('../middleware/middleware')
+const { CheckPostUser, CheckIdUser, Auth } = require('../middleware/middleware')
 
 /**
  * @swagger
  * /api/v2/users:
  *   post:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "User"
  *     summary: example to create user
@@ -37,12 +39,14 @@ const { CheckPostUser, CheckIdUser } = require('../middleware/middleware')
  *       500:
  *         description: Internal server error
  */
-router.post('/users/', CheckPostUser, Insert)
+router.post('/users/', Auth, CheckPostUser, Insert)
 
 /**
  * @swagger
  * /api/v2/users/:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "User"
  *     summary: Get all user
@@ -71,12 +75,14 @@ router.post('/users/', CheckPostUser, Insert)
  *       404:
  *         description: Not found
  */
-router.get('/users/', Get)
+router.get('/users/', Auth, Get)
 
 /**
  * @swagger
  * /api/v2/users/{id}:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "User"
  *     summary: Get one user
@@ -93,12 +99,14 @@ router.get('/users/', Get)
  *       404:
  *         description: Not found
  */
-router.get('/users/:id', GetByPK)
+router.get('/users/:id', Auth, GetByPK)
 
 /**
  * @swagger
  * /api/v2/users/{id}:
  *   put:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "User"
  *     summary: Get one user
@@ -134,12 +142,14 @@ router.get('/users/:id', GetByPK)
  *       400:
  *         description: Bad request
  */
-router.put('/users/:id', CheckIdUser, Update)
+router.put('/users/:id', Auth, CheckIdUser, Update)
 
 /**
  * @swagger
  * /api/v2/users/{id}:
  *   delete:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "User"
  *     summary: Get one user
@@ -156,7 +166,7 @@ router.put('/users/:id', CheckIdUser, Update)
  *       404:
  *         description: Not found
  */
-router.delete('/users/:id', CheckIdUser, Delete)
+router.delete('/users/:id', Auth, CheckIdUser, Delete)
 
 
 module.exports = router

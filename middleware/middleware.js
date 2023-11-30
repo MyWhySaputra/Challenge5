@@ -115,7 +115,7 @@ async function CheckIdTransaction(req, res, next) {
     next()
 }
 
-async function Restrict(req, res, next) {
+async function Auth(req, res, next) {
 
     const { authorization } = req.headers
 
@@ -148,5 +148,5 @@ module.exports = {
     CheckIdBankAccount,
     CheckPostTransaction,
     CheckIdTransaction,
-    Restrict
+    Auth
 }

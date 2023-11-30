@@ -15,6 +15,17 @@ const swaggerDefinition = {
             },
 
         ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'apiKey',
+                    in: 'header',
+                    name: "Authorization",
+                    description: "Input your Token for Get Access",
+                    bearerFormat: 'JWT'
+                }
+            }
+        }
     },
     apis: [
         './routes/user.route.js',

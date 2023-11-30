@@ -1,16 +1,14 @@
 const express = require('express')
 const router = express.Router()
-const { Create, Login } = require('../controller/auth.controller')
-const { Restrict } = require('../middleware/middleware')
-const { ResponseTemplate } = require('../helper/template.helper')
+const { Register, Login } = require('../controller/auth.controller')
 
 /**
  * @swagger
- * /api/v2/auth/create:
+ * /api/v2/auth/register:
  *   post:
  *     tags:
  *      - "Auth"
- *     summary: example to create user
+ *     summary: example to register user
  *     requestBody:
  *        required: true
  *        content:
@@ -38,11 +36,11 @@ const { ResponseTemplate } = require('../helper/template.helper')
  *       500:
  *         description: Internal server error
  */
-router.post('/auth/create', Create)
+router.post('/auth/register', Register)
 
 /**
  * @swagger
- * /api/v2/users/login:
+ * /api/v2/auth/login:
  *   post:
  *     tags:
  *      - "Auth"
@@ -65,32 +63,5 @@ router.post('/auth/create', Create)
  *         description: Bad request
  */
 router.post('/auth/login', Login)
-
-/**
- * @swagger
- * /api/v2/auth/authenticate:
- *   post:
- *     tags:
- *      - "Auth"
- *     summary: example to get authenticated user
- *     parameters:
- *       - in: headers
- *         name: Authorization
- *         required: true
- *         description: The token
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful response
- */
-router.post('/auth/authenticate', Restrict, (req, res) => {
-    let user = {
-        user: req.user
-    }
-    let resp = ResponseTemplate(user, 'success', null, 200)
-    return res.json(resp)
-})
-
 
 module.exports = router

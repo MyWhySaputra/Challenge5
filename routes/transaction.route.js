@@ -1,12 +1,14 @@
 const express = require('express')
 const router = express.Router()
 const { Insert, Get, GetByPK } = require('../controller/transaction.controller')
-const { CheckPostTransaction } = require('../middleware/middleware')
+const { CheckPostTransaction, Auth } = require('../middleware/middleware')
 
 /**
  * @swagger
  * /api/v2/transactions:
  *   post:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "Transaction"
  *     summary: example to create transaction
@@ -27,12 +29,14 @@ const { CheckPostTransaction } = require('../middleware/middleware')
  *       200:
  *         description: Successful response
  */
-router.post('/transactions/', CheckPostTransaction, Insert)
+router.post('/transactions/', Auth, CheckPostTransaction, Insert)
 
 /**
  * @swagger
  * /api/v2/transactions:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "Transaction"
  *     summary: Get all transactions
@@ -59,12 +63,14 @@ router.post('/transactions/', CheckPostTransaction, Insert)
  *       200:
  *         description: Successful response
  */
-router.get('/transactions/', Get)
+router.get('/transactions/', Auth, Get)
 
 /**
  * @swagger
  * /api/v2/transactions/{id}:
  *   get:
+ *     security:
+ *      - bearerAuth: []
  *     tags:
  *      - "Transaction"
  *     summary: Get one transaction
@@ -79,6 +85,6 @@ router.get('/transactions/', Get)
  *       200:
  *         description: Successful response
  */
-router.get('/transactions/:id', GetByPK)
+router.get('/transactions/:id', Auth, GetByPK)
 
 module.exports = router
